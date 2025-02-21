@@ -3,7 +3,7 @@
 Client::Client(B::io_context& io_context) : io_context{ io_context }, socket(io_context) {
     auto address = B::ip::make_address_v4("192.168.166.31", ec);
     if (ec) {
-        std::cerr << "Îøèáêà: " << ec.message() << std::endl;
+        std::cerr << "ÐžÑˆÐ¸Ð±ÐºÐ°: " << ec.message() << std::endl;
         std::exit(1);
     }
 
@@ -11,11 +11,11 @@ Client::Client(B::io_context& io_context) : io_context{ io_context }, socket(io_
 
     socket.connect(endpoint, ec);
     if (ec == B::error::connection_refused) {
-        std::cerr << "Ñåðâåð íå îòâåòèë." << std::endl;
+        std::wcout << L"Ð¡ÐµÑ€Ð²ÐµÑ€ Ð½Ðµ Ð¾Ñ‚Ð²ÐµÑ‚Ð¸Ð»." << std::endl;
         std::exit(1);
     }
     if (ec) {
-        std::cerr << "Îøèáêà ïîäêëþ÷åíèÿ: " << ec.message() << std::endl;
+        std::cerr << "ÐžÑˆÐ¸Ð±ÐºÐ° Ð¿Ð¾Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ñ: " << ec.message() << std::endl;
         std::exit(1);
     }
 }
@@ -32,10 +32,10 @@ void Client::read_from_buffer(const error_code& error, std::size_t bytes)
 {
     if (error) {
         if (error == B::error::eof) {
-            std::cerr << "Ñåðâåð ðàçîðâàë ñîåäèíåíèå." << std::endl;
+            std::cerr << "Ð¡ÐµÑ€Ð²ÐµÑ€ Ñ€Ð°Ð·Ð¾Ñ€Ð²Ð°Ð» ÑÐ¾ÐµÐ´Ð¸Ð½ÐµÐ½Ð¸Ðµ." << std::endl;
         }
         else {
-            std::cout << "Îøèáêà: " << error.message() << std::endl;
+            std::cout << "ÐžÑˆÐ¸Ð±ÐºÐ°: " << error.message() << std::endl;
         }
         return;
     }
@@ -63,7 +63,7 @@ void Client::async_write(std::string message)
     B::async_write(socket, B::buffer(message.data(), message.size()),
         [this](error_code error, std::size_t bytes) {
             if (error) {
-                std::cerr << "Îøèáêà îòïðàâêè: " << error.message() << std::endl;
+                std::cerr << "ÐžÑˆÐ¸Ð±ÐºÐ° Ð¾Ñ‚Ð¿Ñ€Ð°Ð²ÐºÐ¸: " << error.message() << std::endl;
                 return;
             }
         });
@@ -76,12 +76,13 @@ void Client::input()
         while (true) {
             std::cout << name << ": ";
             std::getline(std::cin, message);
-            if (message.starts_with("/send file")) {
-                send_file(message.substr(12));
-            }
-            else {
-                async_write(message + '\n');
-            }
+            // if (message.starts_with("/send file")) {
+            //     send_file(message.substr(12));
+            // }
+            // else {
+            //     async_write(message + '\n');
+            // }
+            async_write(message + '\n');
         }
         }).detach();
 }
@@ -93,7 +94,7 @@ void Client::input_name()
         std::getline(std::cin, message);
         async_write(message + '\n');
         name = message;
-        can_chat = true; //Äåëàþ íåîáõîäèìîñòü ïåðåâîäèòü èìÿ ñòðîêè ââîäà íà íîâóþ ñòðîêó
+        can_chat = true; 
         input();
         }).detach();
 }
@@ -102,7 +103,7 @@ void Client::send_file(std::string&& file_name)
 {
     std::ifstream file(file_name, std::ios::binary);
     if (!file) {
-        std::cout << "Íå óäàëîñü îòêðûòü ôàéë." << std::endl;
+        std::cout << "ÐÐµ ÑƒÐ´Ð°Ð»Ð¾ÑÑŒ Ð¾Ñ‚ÐºÑ€Ñ‹Ñ‚ÑŒ Ñ„Ð°Ð¹Ð»." << std::endl;
         return;
     }
 

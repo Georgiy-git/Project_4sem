@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <boost/asio.hpp>
+#include "boost/asio.hpp"
 #include <vector>
 #include <string>
 #include <optional>
@@ -18,22 +18,22 @@ public:
 
     Client(B::io_context& io_context);
 
-    //Асинхронное ожидание сообщения
+    //РђСЃРёРЅС…СЂРѕРЅРЅРѕРµ РѕР¶РёРґР°РЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ
     void async_read();
 
-    //Чтение с буфера
+    //Р§С‚РµРЅРёРµ СЃ Р±СѓС„РµСЂР°
     void read_from_buffer(const error_code& error, std::size_t bytes);
 
-    //Отправка сообщения на сервер
+    //РћС‚РїСЂР°РІРєР° СЃРѕРѕР±С‰РµРЅРёСЏ РЅР° СЃРµСЂРІРµСЂ
     void async_write(std::string message);
 
-    //Обычный ввод
+    //РћР±С‹С‡РЅС‹Р№ РІРІРѕРґ
     void input();
 
-    //Ввод имени
+    //Р’РІРѕРґ РёРјРµРЅРё
     void input_name();
 
-    //Отправка файла
+    //РћС‚РїСЂР°РІРєР° С„Р°Р№Р»Р°
     void send_file(std::string&& file_name);
 
 private:
