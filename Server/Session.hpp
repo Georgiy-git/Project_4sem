@@ -42,4 +42,7 @@ public:
 
 	//Чтение имени пользователя из потока
 	void async_read_name();
+
+	//
+	void recive_files();
 };

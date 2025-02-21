@@ -84,8 +84,8 @@ void Session::read_from_buffer_name(const boost::system::error_code& error, std:
     std::istream input(&streambuf);
     std::string line;
     std::getline(input, line);
-
     name = line;
+    clients.insert(shared_from_this());
 
     std::cout << socket.remote_endpoint().address().to_string() << " установил им€ " << line << std::endl;
 
@@ -111,7 +111,7 @@ void Session::_help()
     std::string list = "\nƒоступные команды:\n";
     list += "/users - список пользователей\n";
     list += "/make local - создать локальный чат\n";
-    list += "/exit - выход\n";
+    list += "/exit - выход\n\n";
 
     async_write(list);
     async_read();

@@ -36,8 +36,6 @@ public:
 			client->async_write("Сервер: введите Ваше имя: ");
 			client->async_read_name();
 
-			clients.insert(client);
-
 			async_accept();
 			});
 	}
