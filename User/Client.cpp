@@ -3,7 +3,7 @@
 Client::Client(B::io_context& io_context) : io_context{ io_context }, socket(io_context) {
     auto address = B::ip::make_address_v4("192.168.166.31", ec);
     if (ec) {
-        std::cerr << "Ошибка: " << ec.message() << std::endl;
+        std::wcerr << converter.from_bytes("Ошибка: "); std::cout << ec.message() << std::endl;
         std::exit(1);
     }
 
@@ -15,7 +15,7 @@ Client::Client(B::io_context& io_context) : io_context{ io_context }, socket(io_
         std::exit(1);
     }
     if (ec) {
-        std::cerr << "Ошибка подключения: " << ec.message() << std::endl;
+        std::wcerr << converter.from_bytes("Ошибка подключения: "); std::cout << ec.message() << std::endl;
         std::exit(1);
     }
 }
@@ -32,10 +32,10 @@ void Client::read_from_buffer(const error_code& error, std::size_t bytes)
 {
     if (error) {
         if (error == B::error::eof) {
-            std::cerr << "Сервер разорвал соединение." << std::endl;
+            std::wcerr << converter.from_bytes("Сервер разорвал соединение.") << std::endl;
         }
         else {
-            std::cout << "Ошибка: " << error.message() << std::endl;
+            std::wcout << converter.from_bytes("Ошибка: "); std::cout << error.message() << std::endl;
         }
         return;
     }
@@ -63,7 +63,8 @@ void Client::async_write(std::string message)
     B::async_write(socket, B::buffer(message.data(), message.size()),
         [this](error_code error, std::size_t bytes) {
             if (error) {
-                std::cerr << "Ошибка отправки: " << error.message() << std::endl;
+                std::wcerr << converter.from_bytes("Ошибка отправки: "); 
+                    std::cout << error.message() << std::endl;
                 return;
             }
         });
@@ -76,13 +77,12 @@ void Client::input()
         while (true) {
             std::cout << name << ": ";
             std::getline(std::cin, message);
-            // if (message.starts_with("/send file")) {
-            //     send_file(message.substr(12));
-            // }
-            // else {
-            //     async_write(message + '\n');
-            // }
-            async_write(message + '\n');
+            if (message.starts_with("/send file")) {
+                send_file(message.substr(12));
+            }
+            else {
+                async_write(message + '\n');
+            }
         }
         }).detach();
 }
@@ -103,7 +103,7 @@ void Client::send_file(std::string&& file_name)
 {
     std::ifstream file(file_name, std::ios::binary);
     if (!file) {
-        std::cout << "Не удалось открыть файл." << std::endl;
+        std::wcout << converter.from_bytes("Не удалось открыть файл.") << std::endl;
         return;
     }
 
