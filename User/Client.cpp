@@ -11,7 +11,7 @@ Client::Client(B::io_context& io_context) : io_context{ io_context }, socket(io_
 
     socket.connect(endpoint, ec);
     if (ec == B::error::connection_refused) {
-        std::wcout << L"Сервер не ответил." << std::endl;
+        std::wcout << converter.from_bytes("Сервер не ответил.") << std::endl;
         std::exit(1);
     }
     if (ec) {

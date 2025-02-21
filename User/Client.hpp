@@ -7,6 +7,7 @@
 #include <optional>
 #include <thread>
 #include <fstream>
+#include <codecvt>
 
 namespace B = boost::asio;
 using tcp = B::ip::tcp;
@@ -43,4 +44,5 @@ private:
     B::io_context& io_context;
     std::string name;
     bool can_chat = false;
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
 };
